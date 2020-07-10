@@ -1,5 +1,22 @@
 import numpy as np
 import cv2
+import RPi.GPIO as GPIO
+import time
+
+channel = 21
+
+# GPIO setup
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(channel, GPIO.OUT)
+
+
+def motor_on(pin):
+    GPIO.output(pin, GPIO.HIGH)  # Turn motor on
+
+
+def motor_off(pin):
+    GPIO.output(pin, GPIO.LOW)  # Turn motor off
+
 
 # multiple cascades: https://github.com/Itseez/opencv/tree/master/data/haarcascades
 
@@ -15,6 +32,11 @@ while 1:
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
+    if type(faces) == np.ndarray:
+        motor_on(channel)
+        time.sleep(2)
+        motor_off(channel)
+
     for (x,y,w,h) in faces:
         cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
         roi_gray = gray[y:y+h, x:x+w]
@@ -29,5 +51,6 @@ while 1:
     if k == 27:
         break
 
+GPIO.cleanup()
 cap.release()
 cv2.destroyAllWindows()
