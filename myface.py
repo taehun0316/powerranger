@@ -7,12 +7,11 @@ channel = 21
 
 # GPIO setup
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(channel, GPIO.OUT)
+GPIO.setup(channel, GPIO.OUT, initial=0)
 
 
 def motor_on(pin):
     GPIO.output(pin, GPIO.HIGH)  # Turn motor on
-
 
 def motor_off(pin):
     GPIO.output(pin, GPIO.LOW)  # Turn motor off
